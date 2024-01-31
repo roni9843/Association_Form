@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import getCroppedImg from "./NewGetCroppedImg";
 
 const NewImageAndCrop = ({
-  setStudent_image,
-  setStudent_imageOnline,
-  croppedImage,
-  setCroppedImage,
+  uploadUserImage,
+  userImageLink,
+  setUserImageLink,
+  userImageLoading,
+  title,
+  ratioHeigh,
+  ratioWidth,
+  idNumber,
+  setIsDisplay,
 }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -30,22 +34,7 @@ const NewImageAndCrop = ({
       );
       const croppedImageBase64 = await convertBlobToBase64(croppedImageBlob);
 
-      //    setCroppedImage(croppedImageBlob);
-      //  setStudent_image(croppedImageBlob);
-
-      // Upload the cropped image to ImgBB
-      setStudent_imageOnline(croppedImageBase64);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const showCroppedImageOffline = async () => {
-    try {
-      const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-      console.log("donee", { croppedImage });
-      setCroppedImage(croppedImage);
-      setStudent_image(croppedImage);
+      uploadUserImage(croppedImageBase64);
     } catch (e) {
       console.error(e);
     }
@@ -97,32 +86,55 @@ const NewImageAndCrop = ({
   };
 
   const handleCancel = () => {
-    // Clear the input file and reset the state
-    setImage("");
-    setCroppedImage("");
+    setUserImageLink("");
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setCroppedAreaPixels("");
-    document.getElementById("uploadCaptureInputFile").value = "";
+    setImage("");
+    //   document.getElementById("uploadCaptureInputFile").value = "";
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
     <div>
-      <input
-        type="file"
-        onChange={(e) => {
-          setImage(URL.createObjectURL(e.target.files[0]));
-        }}
-        onKeyDown={handleKeyDown}
-        id="uploadCaptureInputFile"
-      />
+      <div className="mb-3">
+        <label for="formFile" className="form-label">
+          {title}
+        </label>
+        {!userImageLink && !userImageLoading && (
+          <input
+            className="form-control"
+            type="file"
+            id={idNumber}
+            accept=".jpg, .jpeg, .png"
+            onChange={(e) => {
+              scrollToTop();
+              setTimeout(() => {
+                setImage(URL.createObjectURL(e.target.files[0]));
+              }, 1000);
+              setTimeout(() => {
+                scrollToTop();
+              }, 1000);
+
+              //  scrollToTop();
+            }}
+            onKeyDown={handleKeyDown}
+          />
+        )}
+      </div>
 
       {image && (
         <Cropper
           image={image}
           crop={crop}
           zoom={zoom}
-          aspect={2.5 / 3}
+          aspect={ratioWidth / ratioHeigh}
           onCropChange={setCrop}
           onCropComplete={onCropComplete}
           onZoomChange={setZoom}
@@ -132,36 +144,53 @@ const NewImageAndCrop = ({
         <div
           style={{
             position: "fixed",
+            top: 30,
           }}
         >
           <div>
             <button
+              className="btn btn-success m-2 "
               onClick={() => {
                 showCroppedImage();
-                showCroppedImageOffline();
                 setImage("");
               }}
             >
               Crop
             </button>
-            <button style={{ backgroundColor: "red" }} onClick={handleCancel}>
+            <button
+              className="btn btn-danger m-2 "
+              onClick={() => {
+                handleCancel();
+                document.getElementById(idNumber).value = "";
+              }}
+            >
               Cancel
             </button>
           </div>
         </div>
       )}
+      {userImageLoading && (
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      )}
 
-      <img src={croppedImage} alt="" style={{ width: "200px" }} />
-
-      {croppedImage && (
+      <div className=" ">
+        {userImageLink && (
+          <img
+            src={userImageLink}
+            alt=""
+            style={{ width: "200px", borderRadius: "10px" }}
+          />
+        )}
         <div>
-          <div>
-            <button style={{ backgroundColor: "red" }} onClick={handleCancel}>
+          {userImageLink && (
+            <button className="btn btn-danger mt-2 " onClick={handleCancel}>
               Cancel
             </button>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

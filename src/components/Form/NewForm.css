@@ -27,12 +27,3 @@
   background-color: #04AA6D;
   color: white;
 }
-button {
-    margin: 20px;
-    background: #7aedc1;
-    height: 50px;
-    border: 2px solid #09a96d;
-    border-radius: 15px;
-    cursor: pointer;
-    color: #444;
-}
