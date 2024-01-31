@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Association_Form/static/css/main.123088dd.css",
+    "main.js": "/Association_Form/static/js/main.325e7628.js",
+    "static/js/787.9325c4b2.chunk.js": "/Association_Form/static/js/787.9325c4b2.chunk.js",
+    "index.html": "/Association_Form/index.html",
+    "main.123088dd.css.map": "/Association_Form/static/css/main.123088dd.css.map",
+    "main.325e7628.js.map": "/Association_Form/static/js/main.325e7628.js.map",
+    "787.9325c4b2.chunk.js.map": "/Association_Form/static/js/787.9325c4b2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.123088dd.css",
+    "static/js/main.325e7628.js"
+  ]
+}
